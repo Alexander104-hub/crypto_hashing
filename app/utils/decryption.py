@@ -2,6 +2,7 @@ from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 import base64
 import ast
+import codecs
 
 def decrypt(ciphertext: str, key: str, tag: str, nonce: str):
     key = bytes_from_str(key)
@@ -12,8 +13,5 @@ def decrypt(ciphertext: str, key: str, tag: str, nonce: str):
     decrypted_bytes = cipher.decrypt_and_verify(ciphertext, tag)
     return decrypted_bytes.decode('utf-8')
 
-
-
-def bytes_from_str(string: str):
-    string = f'b\'{string}\''.replace('\\\\', '\\')
-    return ast.literal_eval(string)
+def bytes_from_str(raw_str: str):
+    return raw_str.replace('\\\\', '\\').encode().decode('unicode_escape').encode('latin1')

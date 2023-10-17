@@ -1,5 +1,5 @@
 pycryptodome
 fastapi
 pydantic
-base64
-ast
+aiofiles
+python-multipart
