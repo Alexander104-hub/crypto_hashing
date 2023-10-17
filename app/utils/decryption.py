@@ -2,6 +2,8 @@ from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 import base64
 import binascii
+import binascii
+
 
 def decrypt(ciphertext, key, tag, nonce):
     key = bytes_from_str(key)
