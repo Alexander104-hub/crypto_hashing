@@ -9,12 +9,12 @@ CIPFERTEXT_FILE = 'ciphertext.txt'
 
 
 @router.get("/", response_model=TEXT_ENCRYPTION)
-async def read_item(text: str):
-    ciphertext, key, tag, nonce = encrypt(text)
+async def encryption_read(text: str):
+    ciphertext, key, tag, nonce = encrypt(text) 
     with open(CIPFERTEXT_FILE, 'w+') as f:
         f.write(ciphertext)
     return JSONResponse(
-        content=[{'Шифротекст: ': ciphertext, 'Ключ: ': key, 'Тег: ': tag, 'Одноразовый код:': nonce}],
+        content=[{'Шифротекст: ': ciphertext, 'Ключ: ': key, 'Тег: ': tag, 'Одноразовый код: ': nonce}],
         status_code=status.HTTP_200_OK,)
 
 

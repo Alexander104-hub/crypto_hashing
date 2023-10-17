@@ -9,7 +9,7 @@ router = APIRouter(prefix='/api/decryption', tags=['decryption'])
 
 
 @router.get("/", response_model=TEXT_DECRYPTION)
-async def read_item(ciphertext: str, key: str, tag: str, nonce: str):
+async def decryption_read(ciphertext: str, key: str, tag: str, nonce: str):
     text = decrypt(ciphertext, key, tag, nonce)
     return JSONResponse(
         content=[text],
