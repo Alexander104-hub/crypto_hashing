@@ -9,7 +9,9 @@ def decrypt(ciphertext: str, key: str, tag: str, nonce: str):
     nonce = bytes_from_str(nonce)
     ciphertext = base64.b64decode(ciphertext.encode('utf-8'))
     cipher = AES.new(key, AES.MODE_EAX, nonce)
-    return str(cipher.decrypt_and_verify(ciphertext, tag)).replace('b\'', '').replace('\'', '')
+    decrypted_bytes = cipher.decrypt_and_verify(ciphertext, tag)
+    return decrypted_bytes.decode('utf-8')
+
 
 
 def bytes_from_str(string: str):

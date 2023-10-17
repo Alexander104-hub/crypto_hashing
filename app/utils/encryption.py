@@ -4,7 +4,7 @@ import base64
 import ast
 
 def encrypt(text: str) -> str:
-    text = text.encode('ascii', 'utf-8')
+    text = text.encode('utf-8')
     random_key = get_random_bytes(16)
     cipher = AES.new(random_key, AES.MODE_EAX)
     ciphertext, tag = cipher.encrypt_and_digest(text)
