@@ -1,2 +1,3 @@
-# crypto_hashing
-cryptography lab
+pip install -r requirements.txt
+
+uvicorn main:app --reload
