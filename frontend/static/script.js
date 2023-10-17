@@ -31,3 +31,31 @@ async function decrypt() {
     const data = await response.json();
     document.getElementById('decryptedText').innerText = data[0];
 }
+
+async function saveText() {
+    const text = document.getElementById('textToSave').value;
+    const filename = document.getElementById('filename').value;
+    const response = await fetch(`/api/hashing/save_text`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            text: text,
+            filename: filename
+        })
+    });
+    const data = await response.json();
+    document.getElementById('saveTextResponse').innerText = data[0]['Сообщение: '];
+}
+
+async function computeFileHash() {
+    const response = await fetch(`/api/hashing/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    document.getElementById('hashes').innerText = JSON.stringify(data, null, 2);
+}

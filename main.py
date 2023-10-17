@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.encrypting_router import router as encrypting_router
 from app.routers.decrypting_router import router as decrypting_router
+from app.routers.hashing_router import router as hashing_router
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 
@@ -24,6 +25,7 @@ app.add_middleware(
 )
 app.include_router(encrypting_router)
 app.include_router(decrypting_router)
+app.include_router(hashing_router)
 
 app.mount("/static", StaticFiles(directory="frontend"), name="static")
 

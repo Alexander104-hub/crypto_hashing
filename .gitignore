@@ -1,1 +1,3 @@
 ciphertext.txt
+hashes.json
+files_to_digest/*

@@ -3,7 +3,6 @@ from app.utils.encryption import encrypt
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse, FileResponse
 
-
 router = APIRouter(prefix='/api/encryption', tags=['encryption'])
 CIPFERTEXT_FILE = 'ciphertext.txt'
 

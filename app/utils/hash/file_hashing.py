@@ -29,7 +29,15 @@ class Hash:
                 data[file_name] = self.__get_hash(fullpath)
         return data
 
+    def get_hash(self, file_path):
+        sha256_hash = hashlib.sha256()
+        with open(file_path,"rb") as f:
+            for byte_block in iter(lambda: f.read(4096),b""):
+                sha256_hash.update(byte_block)
+        return sha256_hash.hexdigest()
+
+    
     def __get_hash(self, file: str):
-        with open(file, "rb") as out_file:
-            digest = hashlib.file_digest(out_file, "sha256")
-        return digest.hexdigest() 
+        digest = self.get_hash(file)
+        return digest
+
