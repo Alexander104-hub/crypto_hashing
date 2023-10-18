@@ -13,13 +13,19 @@ class Hash:
         if not path.exists():
             raise FileNotFoundError("File or folder doesn't exist")
 
-        hashes[filepath] = self.__dir_to_list(filepath)
+
+        if path.is_dir():
+            hashes[filepath] = self.__dir_to_list(filepath)
+        elif path.is_file():
+            hashes[filepath] = self.__get_hash(filepath)
+
+
         self.__hashes = hashes
         with open("./hashes.json", "w") as file:
             json.dump(self.__hashes, file, indent=4)
 
 
-    def __dir_to_list(self, dirname, path=os.path.pathsep):
+    def __dir_to_list(self, dirname):
         data = {}
         for file_name in os.listdir(dirname):
             fullpath = os.path.join(dirname, file_name)
