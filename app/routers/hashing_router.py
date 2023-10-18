@@ -1,6 +1,6 @@
 import json
 from fastapi import APIRouter, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from app.utils.hash import file_hashing
 from typing import Dict, Any
 from app.models.hashing_model import TextFile
@@ -8,11 +8,11 @@ from app.models.hashing_model import TextFile
 router = APIRouter(prefix='/api/hashing', tags=['hashing'])
 
 
-@router.get("/", response_model=Dict[str, Any])
-async def compute_file_hash():
+@router.get("/", response_model=TextFile)
+async def compute_file_hash(filepath: str):
     try:
         hash_func = file_hashing.Hash()
-        hash_func.compute_file_hash("files_to_digest")
+        hash_func.compute_file_hash(filepath)
         with open("./hashes.json", "r") as file:
             hashes = json.load(file)
         return JSONResponse(status_code=status.HTTP_200_OK, content=hashes)
@@ -21,11 +21,6 @@ async def compute_file_hash():
     
 
 
-@router.post("/save_text")
-async def save_text(file: TextFile):
-    with open(f"files_to_digest/{file.filename}.txt", 'w+') as f:
-        f.write(file.text)
-    return JSONResponse(
-        content=[{'Сообщение: ': 'Текст успешно сохранен'}],
-        status_code=status.HTTP_200_OK,
-    )
+@router.get("/download_hashes")
+async def save_text():
+    return FileResponse(path="hashes.json", media_type='application/octet-stream', filename="hashes.json")
