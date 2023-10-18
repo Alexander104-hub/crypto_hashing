@@ -50,12 +50,15 @@ async function saveText() {
 }
 
 async function computeFileHash() {
-    const response = await fetch(`/api/hashing/`, {
+
+    var filepath = document.getElementById("file-browse").value;
+    console.log(filepath)
+    const response = await fetch(`/api/hashing/?filepath=${filepath}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
     });
-    const data = await response.json();
-    document.getElementById('hashes').innerText = JSON.stringify(data, null, 2);
+    // const data = await response.json();
+    // document.getElementById('hashes').innerText = JSON.stringify(data, null, 2);
 }
