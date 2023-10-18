@@ -38,8 +38,9 @@
         </div>
         <div id='computeHash'>
             <h2>Вычислить хеши</h2>
-            <button class='custom-button' onclick='computeFileHash()'>Вычислить хеши</button>
-            <pre id='hashes'></pre>
+	    <input type="text" id="file-browse" placeholder="Enter path to file or folder">
+	    <button class='custom-button' onclick='computeFileHash()'>Вычислить хеши</button>
+	    <a href="/api/hashing/download_hashes">Скачать файл</a>
         </div>
     </div>
 <script src='static/script.js'></script>
