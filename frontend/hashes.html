@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Compute hashes for files</title>
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+    <link rel="icon" href="static/favicon.ico">
+</head>
+<body>
+        <div id='computeHash'>
+            <h2>Вычислить хеши</h2>
+	    <input type="text" id="file-browse" placeholder="Enter path to file or folder">
+	    <button class='custom-button' onclick='computeFileHash()'>Вычислить хеши</button>
+	    <div id="hashes-textarea">
+		<textarea id="json-hashes-text-area" rows=30 cols=180 unselectable="on" readonly></textarea>
+	    </div>
+	    <a href="#" onclick='download_hashes()'>Скачать файл</a>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src='static/script.js'></script>
