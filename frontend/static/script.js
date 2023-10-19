@@ -52,13 +52,28 @@ async function saveText() {
 async function computeFileHash() {
 
     var filepath = document.getElementById("file-browse").value;
-    console.log(filepath)
-    const response = await fetch(`/api/hashing/?filepath=${filepath}`, {
+    let response = await fetch(`/api/hashing/?filepath=${filepath}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         },
+    }).then(function(response){
+
+	return response.text()
     });
-    // const data = await response.json();
-    // document.getElementById('hashes').innerText = JSON.stringify(data, null, 2);
+    var obj = JSON.parse(response);
+    var json_hashes = JSON.stringify(obj, undefined, 4);
+    console.log(json_hashes)
+    document.getElementById("json-hashes-text-area").value = json_hashes;
+}
+
+
+async function download_hashes() {
+    var json = document.getElementById("json-hashes-text-area").value;
+    var downloadableLink = document.createElement('a');
+    downloadableLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
+    downloadableLink.download = "hashes" + ".json";
+    document.body.appendChild(downloadableLink);
+    downloadableLink.click();
+    document.body.removeChild(downloadableLink);
 }
