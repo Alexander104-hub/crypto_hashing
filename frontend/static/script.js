@@ -77,3 +77,22 @@ async function download_hashes() {
     downloadableLink.click();
     document.body.removeChild(downloadableLink);
 }
+
+
+async function computeFileDiff() {
+    var path1 = document.getElementById('file-path-diff-1').value;
+    var path2 = document.getElementById('file-path-diff-2').value;
+    let response = await fetch(`/api/hashing/compute_diff/?path1=${path1}&path2=${path2}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    }).then(function(response){
+
+	return response.text()
+    });
+    var obj = JSON.parse(response);
+    var json_hashes = JSON.stringify(obj, undefined, 4);
+    document.getElementById("json-hashes-diff-text-area").value = json_hashes;
+}
+
