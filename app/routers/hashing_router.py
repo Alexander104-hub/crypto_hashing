@@ -10,6 +10,8 @@ router = APIRouter(prefix='/api/hashing', tags=['hashing'])
 
 @router.get("/", response_model=TextFile)
 async def compute_file_hash(filepath: str):
+    # Allow user select hash function he needs or wants.
+    # https://www.pycrypto.org/doc/#crypto-hash-hash-functions
     try:
         hash_func = file_hashing.Hash()
         hashes = hash_func.compute_file_hash(filepath)
@@ -21,6 +23,8 @@ async def compute_file_hash(filepath: str):
 
 @router.get("/download_hashes")
 async def save_text():
+    # Generate checksum for files that will be generated:
+    # md5, sha128, sha256
     return FileResponse(path="hashes.json", media_type='application/octet-stream', filename="hashes.json")
 
 @router.get('/compute_diff')

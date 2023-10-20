@@ -95,4 +95,5 @@ async function computeFileDiff() {
     var json_hashes = JSON.stringify(obj, undefined, 4);
     document.getElementById("json-hashes-diff-text-area").value = json_hashes;
 }
-
+// https://web.dev/articles/read-files
+// https://stackoverflow.com/questions/12942436/how-to-get-folder-directory-from-html-input-type-file-or-any-other-way
