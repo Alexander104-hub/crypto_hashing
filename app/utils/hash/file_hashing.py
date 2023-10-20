@@ -24,6 +24,8 @@ class Hash:
         with open("./hashes.json", "w") as file:
             json.dump(self.__hashes, file, indent=4)
 
+        return self.__hashes 
+
 
     def __dir_to_list(self, dirname):
         data = {}
