@@ -32,23 +32,6 @@ async function decrypt() {
     document.getElementById('decryptedText').innerText = data[0];
 }
 
-async function saveText() {
-    const text = document.getElementById('textToSave').value;
-    const filename = document.getElementById('filename').value;
-    const response = await fetch(`/api/hashing/save_text`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            text: text,
-            filename: filename
-        })
-    });
-    const data = await response.json();
-    document.getElementById('saveTextResponse').innerText = data[0]['Сообщение: '];
-}
-
 async function computeFileHash() {
 
     var filepath = document.getElementById("file-browse").value;
