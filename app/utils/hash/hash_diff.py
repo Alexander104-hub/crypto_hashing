@@ -16,12 +16,14 @@ class HashDiff:
 
         if __path.is_file():
             file_ext = __path.name.split('.')[-1]
+            print(file_ext)
             if file_ext != 'json':
-                raise file_exceptions.IncorrectFileExt()
+                raise file_exceptions.IncorrectFileExt("Incorrect file extenteion. Require: .json")
             # Open it and return file's content.
             with open(__path, "r") as file:
                 file_content = file.read()
-            if type(eval(file_content)) != dict:
+            if x := type(eval(file_content)) != dict: # check for strs and dicts
+                print(x)
                 raise TypeError('Content is not json')
             return eval(file_content)
 
