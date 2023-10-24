@@ -17,6 +17,55 @@ async function encrypt() {
     document.getElementById('encryptedText').innerHTML += "<span class='label'>Одноразовый код:</span><span class='value'>" + values[3] + "</span>";
 }
 
+async function encryptFile() {
+    const fileInput = document.getElementById('encryptFile');
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch('/api/encryption/encrypt_file', {
+        method: 'POST',
+        body: formData
+    });
+
+    const result = await response.json();
+
+    document.getElementById('encryptedFileKey').textContent = 'Ключ: ' + result[0]['Ключ: '];
+    document.getElementById('encryptedFileTag').textContent = 'Тег: ' + result[0]['Тег: '];
+    document.getElementById('encryptedFileNonce').textContent = 'Одноразовый код: ' + result[0]['Одноразовый код: '];
+}
+
+async function downloadFile() {
+    const filename = document.getElementById('downloadFileName').value;
+    const response = await fetch('/api/encryption/download_encrypted_file/' + filename);
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'download';
+    a.click();
+}
+
+async function getFiles() {
+    const input = document.getElementById('downloadFileName');
+    const response = await fetch('/api/encryption/get_encrypted_files');
+    const files = await response.json();
+
+    let fileList = '';
+    let count = 0;
+    
+    for (let file of files) {
+        if (file.startsWith(input.value)) {
+            fileList += '<div>' + file + '</div>';
+            count++;
+        }
+        if (count >= 5) break;
+    }
+
+    document.getElementById('fileList').innerHTML = fileList;
+}
+
 async function decrypt() {
     const ciphertext = document.getElementById('decryptText').value;
     const key = document.getElementById('decryptKey').value;

@@ -31,9 +31,7 @@ async def upload_encrypted_file(file: UploadFile, key: str, tag: str, nonce: str
 
 @router.get("/download_decrypted_file/{filename}")
 def download_decrypted_file(filename: str):
-    # files = os.listdir(f'{DIR_PATH}/')
     return FileResponse(path=f"{DIR_PATH}/{filename}", media_type='application/octet-stream', filename=f"{filename}")
-
 
 
 @router.delete("/delete_decrypted_file/{filename}")

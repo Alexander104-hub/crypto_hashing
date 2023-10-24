@@ -18,6 +18,20 @@
             <h3>Расшифрованный текст:</h3>
             <p id="decryptedText"></p>
         </div>
+        <div id="fileEncryption">
+            <h2>Шифрование файла:</h2>
+            <input type="file" id="encryptFile" placeholder="Выберите файл для шифрования">
+            <button class="custom-button" onclick="encryptFile()">Зашифровать файл</button>
+            <p id="encryptedFileKey"></p>
+            <p id="encryptedFileTag"></p>
+            <p id="encryptedFileNonce"></p>
+        </div>
+        <div id="fileDownload">
+            <h2>Скачивание зашифрованного файла:</h2>
+            <input type="text" id="downloadFileName" placeholder="Введите имя файла для скачивания" oninput="getFiles()">
+            <button class="custom-button" onclick="downloadFile()">Скачать файл</button>
+            <div id="fileList"></div>
+        </div>              
     </div>
 </div>
 
