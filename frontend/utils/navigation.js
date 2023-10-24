@@ -23,12 +23,16 @@ function loadPage(pageUrl, page_updated=false) {
     };
     xhttp.open("GET", pageUrl, true);
     xhttp.send();
+    console.log(localStorage.getItem('current_page'));
     localStorage.setItem('current_page', pageUrl);
 }
 
+
 window.addEventListener('load', function() {
     var savedPage = localStorage.getItem('current_page');
+    if (savedPage === null) {
+        savedPage = main_page;
+    }
     console.log(savedPage)
     loadPage(savedPage, page_updated=true);
 });
-
