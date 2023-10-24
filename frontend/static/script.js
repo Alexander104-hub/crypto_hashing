@@ -35,7 +35,8 @@ async function decrypt() {
 async function computeFileHash() {
 
     var filepath = document.getElementById("file-browse").value;
-    let response = await fetch(`/api/hashing/?filepath=${filepath}`, {
+    var hash_algo = document.getElementById("choose-hashes-algo").value;
+    let response = await fetch(`/api/hashing/?filepath=${filepath}&hash_algo=${hash_algo}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -46,7 +47,6 @@ async function computeFileHash() {
     });
     var obj = JSON.parse(response);
     var json_hashes = JSON.stringify(obj, undefined, 4);
-    console.log(json_hashes)
     document.getElementById("json-hashes-text-area").value = json_hashes;
 }
 
