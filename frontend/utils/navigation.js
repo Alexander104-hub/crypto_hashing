@@ -21,7 +21,11 @@ function loadPage(pageUrl, page_updated=false) {
             document.getElementById("container").innerHTML = this.responseText;
         }
     };
-    xhttp.open("GET", pageUrl, true);
+    
+    // Add a timestamp or random number as a query parameter to prevent caching
+    var noCacheUrl = pageUrl + "?t=" + new Date().getTime();
+    
+    xhttp.open("GET", noCacheUrl, true);
     xhttp.send();
     console.log(localStorage.getItem('current_page'));
     localStorage.setItem('current_page', pageUrl);
