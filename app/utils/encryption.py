@@ -10,5 +10,11 @@ def encrypt(text):
     ciphertext, tag = cipher.encrypt_and_digest(text)
     return base64.b64encode(ciphertext).decode('utf-8'), bytes_to_str(binascii.hexlify(random_key)), bytes_to_str(binascii.hexlify(tag)), bytes_to_str(binascii.hexlify(cipher.nonce))
 
+def encrypt_file(file):
+    random_key = get_random_bytes(16)
+    cipher = AES.new(random_key, AES.MODE_EAX)
+    ciphertext, tag = cipher.encrypt_and_digest(file)
+    return base64.b64encode(ciphertext), bytes_to_str(binascii.hexlify(random_key)), bytes_to_str(binascii.hexlify(tag)), bytes_to_str(binascii.hexlify(cipher.nonce))
+
 def bytes_to_str(b: bytes):
     return str(b)[2:-1]
