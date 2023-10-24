@@ -7,12 +7,12 @@ router = APIRouter(prefix='/api/hashing', tags=['hashing'])
 
 
 @router.get("/", response_model=TextFile)
-async def compute_file_hash(filepath: str):
+async def compute_file_hash(filepath: str, hash_algo: str):
     # Allow user select hash function he needs or wants.
     # https://www.pycrypto.org/doc/#crypto-hash-hash-functions
     try:
         hash_func = file_hashing.Hash()
-        hashes = hash_func.compute_file_hash(filepath)
+        hashes = hash_func.compute_file_hash(filepath, hash_algo)
         return JSONResponse(status_code=status.HTTP_200_OK, content=hashes)
     except Exception as e:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=str(e))

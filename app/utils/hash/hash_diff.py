@@ -16,14 +16,12 @@ class HashDiff:
 
         if __path.is_file():
             file_ext = __path.name.split('.')[-1]
-            print(file_ext)
             if file_ext != 'json':
-                raise file_exceptions.IncorrectFileExt("Incorrect file extenteion. Require: .json")
+                raise file_exceptions.IncorrectFileExt("Incorrect file extention. Require: .json")
             # Open it and return file's content.
             with open(__path, "r") as file:
                 file_content = file.read()
-            if x := type(eval(file_content)) != dict: # check for strs and dicts
-                print(x)
+            if type(eval(file_content)) != dict: # check for strs and dicts
                 raise TypeError('Content is not json')
             return eval(file_content)
 
@@ -32,11 +30,15 @@ class HashDiff:
                                               syntax='explicit', marshal=True))
 
     def __handle_diff_result(self, result):
-        #hash1 is 'older' than hash2
         return json.dumps(result, indent=4)
 
 """
 hash1 must be done earlier than hash2
+
+/path/dsad: new_hash - updated (highlight with green)
+/path/fjdksfgjdfg: new_hash - new (highlight with yellow)
+/path/fksdlfsdf - deleted (highlight with red)
+
 
 Overview:
 root folder:

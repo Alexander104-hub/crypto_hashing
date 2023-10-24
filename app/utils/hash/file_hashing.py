@@ -7,7 +7,7 @@ import json
 class Hash:
     def __init__(self):
         self.__hashes = {}
-    def compute_file_hash(self, filepath: str):
+    def compute_file_hash(self, filepath: str, hash_algo):
         path = Path(filepath)
         hashes = {}
         if not path.exists():
@@ -15,9 +15,9 @@ class Hash:
 
 
         if path.is_dir():
-            hashes[filepath] = self.__dir_to_list(filepath)
+            hashes[filepath] = self.__dir_to_list(filepath, hash_algo)
         elif path.is_file():
-            hashes[filepath] = self.__get_hash(filepath)
+            hashes[filepath] = self.__get_hash(filepath, hash_algo)
 
 
         self.__hashes = hashes
@@ -27,17 +27,17 @@ class Hash:
         return self.__hashes 
 
 
-    def __dir_to_list(self, dirname):
+    def __dir_to_list(self, dirname, hash_algo):
         data = {}
         for file_name in os.listdir(dirname):
             fullpath = os.path.join(dirname, file_name)
             if os.path.isdir(fullpath):
-                data[file_name] = self.__dir_to_list(fullpath) 
+                data[file_name] = self.__dir_to_list(fullpath, hash_algo) 
             elif os.path.isfile(fullpath):
-                data[file_name] = self.__get_hash(fullpath)
+                data[file_name] = self.__get_hash(fullpath, hash_algo)
         return data
 
-    def __get_hash(self, file: str):
+    def __get_hash(self, file: str, hash_algo):
         with open(file, "rb") as out_file:
-            digest = hashlib.file_digest(out_file, "sha256")
+            digest = hashlib.file_digest(out_file, hash_algo)
         return digest.hexdigest() 
