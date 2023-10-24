@@ -35,7 +35,7 @@ async function encryptFile() {
     document.getElementById('encryptedFileNonce').textContent = 'Одноразовый код: ' + result[0]['Одноразовый код: '];
 }
 
-async function downloadFile() {
+async function downloadEncryptedFile() {
     const filename = document.getElementById('downloadFileName').value;
     const response = await fetch('/api/encryption/download_encrypted_file/' + filename);
     const blob = await response.blob();
@@ -80,6 +80,43 @@ async function decrypt() {
     const data = await response.json();
     document.getElementById('decryptedText').innerText = data[0];
 }
+
+
+async function decryptAndDownloadFile() {
+    const fileInput = document.getElementById('decryptFile');
+    const key = document.getElementById('key').value;
+    const tag = document.getElementById('tag').value;
+    const nonce = document.getElementById('nonce').value;
+    
+    if (!fileInput.files.length) {
+        return;
+    }
+    
+    const file = fileInput.files[0];
+    const filename = file.name;
+    let formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(`/api/decryption/decrypt_file/?key=${encodeURIComponent(key)}&tag=${encodeURIComponent(tag)}&nonce=${encodeURIComponent(nonce)}`, {
+        method: 'POST',
+        body: formData
+    });
+    if (response.ok) {
+
+        // Скачивание расшифрованного файла
+        const downloadResponse = await fetch(`/api/decryption/download_decrypted_file/${filename}`);
+        if (downloadResponse.ok) {
+            const blob = await downloadResponse.blob();
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+        }
+    }
+}
+
+
 
 async function computeFileHash() {
 

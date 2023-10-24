@@ -29,9 +29,17 @@
         <div id="fileDownload">
             <h2>Скачивание зашифрованного файла:</h2>
             <input type="text" id="downloadFileName" placeholder="Введите имя файла для скачивания" oninput="getFiles()">
-            <button class="custom-button" onclick="downloadFile()">Скачать файл</button>
+            <button class="custom-button" onclick="downloadEncryptedFile()">Скачать файл</button>
             <div id="fileList"></div>
-        </div>              
+        </div>
+        <div id="fileDecryption">
+            <h2>Расшифровка файла:</h2>
+            <input type="file" id="decryptFile" placeholder="Выберите файл для расшифровки">
+            <input type="text" id="key" placeholder="Введите ключ">
+            <input type="text" id="tag" placeholder="Введите тег">
+            <input type="text" id="nonce" placeholder="Введите nonce">
+            <button class="custom-button" onclick="decryptAndDownloadFile()">Расшифровать и скачать файл</button>
+        </div>                                    
     </div>
 </div>
 

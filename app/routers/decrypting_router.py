@@ -18,7 +18,7 @@ async def decryption_read(ciphertext: str, key: str, tag: str, nonce: str):
 
 
 @router.post("/decrypt_file")
-async def upload_encrypted_file(file: UploadFile, key: str, tag: str, nonce: str):
+async def upload_encrypted_file(key: str, tag: str, nonce: str, file: UploadFile=File(...)):
     decrypted_text = decrypt_file(await file.read(), key, tag, nonce)
     decrypted_filename = f"{file.filename}"
     with open(f"{DIR_PATH}/{decrypted_filename}", 'wb') as f:
