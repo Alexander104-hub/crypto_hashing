@@ -2,7 +2,10 @@ from app.models.encryption_model import FILE_ENCRYPTION, TEXT_ENCRYPTION
 from app.utils.encryption import encrypt, encrypt_file
 from fastapi import APIRouter, status, File, UploadFile
 from fastapi.responses import JSONResponse, FileResponse
+import os
 
+
+DIR_PATH = 'encryption'
 
 router = APIRouter(prefix='/api/encryption', tags=['encryption'])
 
@@ -19,7 +22,7 @@ async def encryption_read(text: str):
 async def encryption_read(file: UploadFile = File(...)):
     ciphertext, key, tag, nonce = encrypt_file(await file.read())
     encrypted_filename = f"{file.filename}"
-    with open(f'encryption/{encrypted_filename}', 'wb') as f:
+    with open(f'{DIR_PATH}/{encrypted_filename}', 'wb') as f:
         f.write(ciphertext)
     return JSONResponse(
         content=[{'Ключ: ': key, 'Тег: ': tag, 'Одноразовый код: ': nonce}],
@@ -29,4 +32,10 @@ async def encryption_read(file: UploadFile = File(...)):
 
 @router.get("/download_encrypted_file/{filename}")
 def download_encrypted_file(filename: str):
-    return FileResponse(path=f"encryption/{filename}", media_type='application/octet-stream', filename=f"{filename}")
+    return FileResponse(path=f"{DIR_PATH}/{filename}", media_type='application/octet-stream', filename=f"{filename}")
+
+
+@router.get("/get_encrypted_files")
+def get_files():
+    files = os.listdir(f'{DIR_PATH}/')
+    return JSONResponse(content=files, status_code=status.HTTP_200_OK)
