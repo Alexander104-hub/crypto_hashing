@@ -1,6 +1,5 @@
-ciphertext.txt
-encrypted_file.txt
-decrypted_file.txt
+decryption/*
+encryption/*
 hashes.json
 files_to_digest/*
 **.pyc
