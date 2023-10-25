@@ -1,31 +1,18 @@
-<!DOCTYPE html>
-<html>
-    <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>Compute hashes difference</title>
-	<link rel="stylesheet" type="text/css" href="static/style.css?version=51">
-	<link rel="icon" href="static/favicon.ico">
-    </head>
-<body>
-    <div id='computeHash'>
-	    <h2>Вычислить хеши</h2>
-	<input type="text" id="file-browse" placeholder="Enter path to file or folder">
-	<select id="choose-hashes-algo">
-	    <option value="sha3_512">sha3_512</option>
-	    <option value="sha3_256">sha3_256</option>
-	    <option value="sha256">sha256</option>
-	    <option value="sha224">sha224</option>
-	    <option value="sha1">sha1</option>
-	    <option value="md5">md5</option>
-	</select>
-	<button class='custom-button' onclick='computeFileHash()'>Вычислить хеши</button>
-	<div id="hashes-textarea">
-	    <textarea id="json-hashes-text-area" rows=30 cols=180 unselectable="on" readonly></textarea>
-	</div>
-	<a href="#" onclick='download_hashes()'>Скачать файл</a>
-	<a  href="javascript:void(0);" onclick="loadPage('./hashes_diff.html')">Проверить изменения</a>
-    </div>
-</body>
-</html>
-
-<script src='static/script.js?version=2' rel='stylesheet' type='text/javascript'></script>
+<div id='computeHash'>
+    <h2>Вычислить хеши</h2>
+<input type="text" id="file-browse" placeholder="Enter path to file or folder">
+<select id="choose-hashes-algo">
+    <option value="sha3_512">sha3_512</option>
+    <option value="sha3_256">sha3_256</option>
+    <option value="sha256">sha256</option>
+    <option value="sha224">sha224</option>
+    <option value="sha1">sha1</option>
+    <option value="md5">md5</option>
+</select>
+<button class='custom-button' onclick='computeFileHash()'>Вычислить хеши</button>
+<div id="hashes-textarea">
+    <textarea id="json-hashes-text-area" rows=30 cols=180 unselectable="on" readonly></textarea>
+</div>
+<a href="#" onclick='download_hashes()'>Скачать файл</a>
+<a  href="javascript:void(0);" onclick="loadPage('./hashes_diff.html')">Проверить изменения</a>
+</div>
