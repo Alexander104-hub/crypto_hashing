@@ -11,10 +11,9 @@ router = APIRouter(prefix='/api/encryption', tags=['encryption'])
 
 
 @router.get("/", response_model=TEXT_ENCRYPTION)
-async def encryption_read(text: str):
-    ciphertext, key, tag, nonce = encrypt(text) 
+async def encryption_read(text: str, mode: str):
     return JSONResponse(
-        content=[{'Шифротекст: ': ciphertext, 'Ключ: ': key, 'Тег: ': tag, 'Одноразовый код: ': nonce}],
+        content=[encrypt(text, mode)],
         status_code=status.HTTP_200_OK,)
 
 
