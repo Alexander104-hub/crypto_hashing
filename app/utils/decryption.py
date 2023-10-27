@@ -23,6 +23,13 @@ def decrypt_cbc(ciphertext, key, iv):
     return decrypted_bytes.decode('utf-8')
 
 
+def decrypt_ebc(ciphertext, key):
+    key = bytes_from_str(key)
+    ciphertext = base64.b64decode(ciphertext.encode('utf-8') + b'==')
+    decipher = AES.new(key, AES.MODE_ECB)
+    decrypted_bytes = unpad(decipher.decrypt(ciphertext), AES.block_size)
+    return decrypted_bytes.decode('utf-8')
+
 # def decrypt(ciphertext, key, tag, nonce, mode):
 #     return modes[mode](ciphertext, key, tag, nonce)
 

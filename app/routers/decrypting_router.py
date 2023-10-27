@@ -1,5 +1,5 @@
 from app.models.decryption_model import TEXT_DECRYPTION
-from app.utils.decryption import decrypt_cbc, decrypt_eax, decrypt_file
+from app.utils.decryption import decrypt_cbc, decrypt_eax, decrypt_ebc, decrypt_file
 from fastapi import APIRouter, status, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse, FileResponse
 import os
@@ -30,6 +30,12 @@ async def decrypt_eax_read(ciphertext: str, key: str, iv: str):
         content=[text],
         status_code=status.HTTP_200_OK,)
 
+@router.get("/decrypt_ebc", response_model=TEXT_DECRYPTION)
+async def decrypt_eax_read(ciphertext: str, key: str):
+    text = decrypt_ebc(ciphertext, key)
+    return JSONResponse(
+        content=[text],
+        status_code=status.HTTP_200_OK,)
 
 @router.post("/decrypt_file")
 async def upload_encrypted_file(key: str, tag: str, nonce: str, file: UploadFile=File(...)):
