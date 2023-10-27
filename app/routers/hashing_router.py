@@ -22,7 +22,7 @@ async def compute_file_hash(filepath: str, hash_algo: str):
 @router.get("/download_hashes")
 async def save_text():
     # Generate checksum for files that will be generated:
-    # md5, sha128, sha256
+    # sha128, sha256
     return FileResponse(path="hashes.json", media_type='application/octet-stream', filename="hashes.json")
 
 @router.get('/compute_diff')
