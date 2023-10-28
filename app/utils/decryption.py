@@ -1,5 +1,4 @@
 from Crypto.Cipher import AES
-from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import unpad
 import base64
 import binascii
@@ -14,7 +13,7 @@ def decrypt_eax(ciphertext, key, tag, nonce):
     return decrypted_bytes.decode('utf-8')
 
 def decrypt_cbc(ciphertext, key, iv):
-    key = bytes_from_str(key)
+    key = bytes_from_str(key, hexlify=True)
     iv = bytes_from_str(iv)
     ciphertext = base64.b64decode(ciphertext.encode('utf-8') + b'==')
     cipher = AES.new(key, AES.MODE_CBC, iv=iv)
@@ -43,6 +42,8 @@ def decrypt_file(ciphertext, key, tag, nonce):
     decrypted_bytes = cipher.decrypt_and_verify(ciphertext, tag)
     return decrypted_bytes
 
-def bytes_from_str(raw_str: str):
+def bytes_from_str(raw_str: str, hexlify = True):
     # return raw_str.replace('\\\\', '\\').encode().decode('unicode_escape').encode('latin1')
+    if hexlify:
+        raw_str = raw_str.encode("utf-8").hex()
     return binascii.unhexlify(raw_str)
