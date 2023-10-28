@@ -5,8 +5,8 @@ import binascii
 
 def decrypt_eax(ciphertext, key, tag, nonce):
     key = bytes_from_str(key)
-    tag = bytes_from_str(tag)
-    nonce = bytes_from_str(nonce)
+    tag = bytes_from_str(tag, hexlify = False)
+    nonce = bytes_from_str(nonce, hexlify = False)
     ciphertext = base64.b64decode(ciphertext.encode('utf-8') + b'==')
     cipher = AES.new(key, AES.MODE_EAX, nonce)
     decrypted_bytes = cipher.decrypt_and_verify(ciphertext, tag)
@@ -39,6 +39,8 @@ def decrypt_file(ciphertext, key, tag, nonce):
     return decrypted_bytes
 
 def bytes_from_str(raw_str: str, hexlify = True):
+    # use hexlify = False if youre not usign passgenerator.generatePassword...
+    # ...function.
     # return raw_str.replace('\\\\', '\\').encode().decode('unicode_escape').encode('latin1')
     if hexlify:
         raw_str = raw_str.encode("utf-8").hex()
