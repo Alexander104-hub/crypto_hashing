@@ -5,8 +5,11 @@ import base64
 import binascii
 
 
-def encrypt_eax(text, random_key):
-    cipher = AES.new(random_key, AES.MODE_EAX)
+def encrypt_eax(text, random_key, **kwargs):
+    if kwargs['nonce']:
+        cipher = AES.new(random_key, AES.MODE_EAX, nonce=bytes.fromhex(kwargs['nonce']))
+    else:
+        cipher = AES.new(random_key, AES.MODE_EAX)
     ciphertext, tag = cipher.encrypt_and_digest(text)
     ciphertext = base64.b64encode(ciphertext).decode('utf-8')
     random_key = bytes_to_str(binascii.hexlify(random_key))
@@ -15,15 +18,18 @@ def encrypt_eax(text, random_key):
     return {'Шифротекст: ': ciphertext, 'Ключ: ': random_key, 'Тег: ': tag, 'Одноразовый код: ': nonce}
 
 
-def encrypt_cbc(text, random_key):
-    cipher = AES.new(random_key, AES.MODE_CBC)
+def encrypt_cbc(text, random_key, **kwargs):
+    if kwargs['iv']:
+        cipher = AES.new(random_key, AES.MODE_CBC, iv=bytes.fromhex(kwargs['iv']))
+    else:
+        cipher = AES.new(random_key, AES.MODE_CBC)
     ciphertext = cipher.encrypt(pad(text, AES.block_size))
     ciphertext = base64.b64encode(ciphertext).decode('utf-8')
     iv = bytes_to_str(binascii.hexlify(cipher.iv))
     random_key = bytes_to_str(binascii.hexlify(random_key))
     return {'Шифротекст: ': ciphertext, 'Ключ: ': random_key, 'IV: ': iv}
 
-def encrypt_ebc(text, random_key):
+def encrypt_ebc(text, random_key, **kwargs):
     cipher = AES.new(random_key, AES.MODE_ECB)
     ciphertext = cipher.encrypt(pad(text, AES.block_size))
     ciphertext = base64.b64encode(ciphertext).decode('utf-8')
@@ -36,27 +42,16 @@ modes = {
     'ECB': encrypt_ebc
 }
 
-# def encrypt(text):
-#     text = text.encode('utf-8')
-#     random_key = get_random_bytes(16)
-#     cipher = AES.new(random_key, AES.MODE_EAX)
-#     ciphertext, tag = cipher.encrypt_and_digest(text)
-#     return base64.b64encode(ciphertext).decode('utf-8'), bytes_to_str(binascii.hexlify(random_key)), bytes_to_str(binascii.hexlify(tag)), bytes_to_str(binascii.hexlify(cipher.nonce))
 
-def encrypt(text, mode, key):
+def encrypt(text, mode, key, nonce=None, iv=None):
     text = text.encode('utf-8')
     if key:
         random_key = bytes.fromhex(key)
     else:
         random_key = get_random_bytes(16)
-    print(random_key)
-    return modes[mode](text, random_key)
-    cipher = AES.new(random_key, mode)
-    ciphertext, tag = cipher.encrypt_and_digest(text)
-    return base64.b64encode(ciphertext).decode('utf-8'), bytes_to_str(binascii.hexlify(random_key)), bytes_to_str(binascii.hexlify(tag)), bytes_to_str(binascii.hexlify(cipher.nonce))
+    return modes[mode](text, random_key, nonce=nonce, iv=iv)
 
-
-
+# TODO: add CBC and ECB algs for files
 def encrypt_file(file):
     random_key = get_random_bytes(16)
     cipher = AES.new(random_key, AES.MODE_EAX)
