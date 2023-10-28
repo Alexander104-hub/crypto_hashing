@@ -13,12 +13,11 @@ def decrypt_eax(ciphertext, key, tag, nonce):
     return decrypted_bytes.decode('utf-8')
 
 def decrypt_cbc(ciphertext, key, iv):
-    key = bytes_from_str(key, hexlify=True)
+    key = bytes_from_str(key)
     iv = bytes_from_str(iv)
     ciphertext = base64.b64decode(ciphertext.encode('utf-8') + b'==')
     cipher = AES.new(key, AES.MODE_CBC, iv=iv)
     decrypted_bytes = unpad(cipher.decrypt(ciphertext), AES.block_size)
-    print(iv)
     return decrypted_bytes.decode('utf-8')
 
 
@@ -28,9 +27,6 @@ def decrypt_ebc(ciphertext, key):
     decipher = AES.new(key, AES.MODE_ECB)
     decrypted_bytes = unpad(decipher.decrypt(ciphertext), AES.block_size)
     return decrypted_bytes.decode('utf-8')
-
-# def decrypt(ciphertext, key, tag, nonce, mode):
-#     return modes[mode](ciphertext, key, tag, nonce)
 
 
 def decrypt_file(ciphertext, key, tag, nonce):

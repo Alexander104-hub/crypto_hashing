@@ -17,7 +17,9 @@ def encrypt_eax(text, random_key):
     return {'Шифротекст: ': ciphertext, 'Ключ: ': random_key, 'Тег: ': tag, 'Одноразовый код: ': nonce}
 
 
-def encrypt_cbc(text, random_key, iv = passgenerator.generatePassword(16)):
+def encrypt_cbc(text, random_key, iv = None):
+    if iv == None:
+        iv = passgenerator.generatePassword(16)
     cipher = AES.new(random_key, AES.MODE_CBC, iv = iv.encode())
     ciphertext = cipher.encrypt(pad(text, AES.block_size))
     ciphertext = base64.b64encode(ciphertext).decode()
@@ -39,7 +41,7 @@ modes = {
 }
 
 
-def encrypt(text, mode, key, key_len = 16):
+def encrypt(text, mode, key, key_len = 32):
     # key_len must be divisible by 8, max value is 32
     if not key:
         key = passgenerator.generatePassword(key_len)

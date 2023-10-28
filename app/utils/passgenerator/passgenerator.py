@@ -17,6 +17,9 @@ def generatePassword(_len: int = 12):
     if (_len < 12): _len = 12
 
     spec = list(string.punctuation)
+    spec.remove('"')
+    spec.remove("/")
+    spec.remove("\\")
     lower = list(string.ascii_lowercase)
     upper = list(string.ascii_uppercase)
     digits = list(string.digits)
