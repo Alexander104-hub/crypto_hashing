@@ -7,6 +7,7 @@ from Crypto.Util.Padding import pad
 from ..utils.passgenerator import passgenerator
 
 
+
 def encrypt_eax(text, random_key):
     cipher = AES.new(random_key, AES.MODE_EAX)
     ciphertext, tag = cipher.encrypt_and_digest(text)

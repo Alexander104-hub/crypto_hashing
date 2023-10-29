@@ -12,6 +12,9 @@ router = APIRouter(prefix='/api/encryption', tags=['encryption'])
 
 @router.get("/", response_model=TEXT_ENCRYPTION)
 async def encryption_read(text: str, mode: str, key = None):
+    if key and (len(key) < 8 or len(key) > 32 or len(key) % 8 != 0):
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,\
+                content="Key len must be divisible by 8 and in range from 16 to 32.")
     return JSONResponse(
         content=[encrypt(text, mode, key)], 
         status_code=status.HTTP_200_OK,)
@@ -31,7 +34,9 @@ async def encryption_read_file(file: UploadFile = File(...)):
 
 @router.get("/download_encrypted_file/{filename}")
 def download_encrypted_file(filename: str):
-    return FileResponse(path=f"{DIR_PATH}/{filename}", media_type='application/octet-stream', filename=f"{filename}")
+    return FileResponse(path=f"{DIR_PATH}/{filename}",\
+            media_type='application/octet-stream',\
+            filename=f"{filename}")
 
 
 @router.get("/get_encrypted_files")
