@@ -1,20 +1,41 @@
 async function encrypt() {
     const text = document.getElementById('encryptText').value;
-    const response = await fetch(`/api/encryption/?text=${encodeURIComponent(text)}`, {
+    const mode = document.getElementById("choose-encryption-algo").value;
+    const key = document.getElementById("encryptionKey").value;
+    const iv = document.getElementById("encryptionIV").value;
+    const response = await fetch(`/api/encryption/?text=${encodeURIComponent(text)}&mode=${mode}&key=${key}&iv=${iv}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         }
     });
     const data = await response.json();
-    var values = Object.keys(data[0]).map(function(key){
-        return data[0][key];
-    });
-    document.getElementById('encryptedText').innerHTML = "<span class='label'>Шифротекст:</span><span class='value'>" + values[0] + "</span><br>";
-    document.getElementById('encryptedText').innerHTML += "<br>";
-    document.getElementById('encryptedText').innerHTML += "<span class='label'>Ключ:</span><span class='value'>" + values[1] + "</span><br>";
-    document.getElementById('encryptedText').innerHTML += "<span class='label'>Тег:</span><span class='value'>" + values[2] + "</span><br>";
-    document.getElementById('encryptedText').innerHTML += "<span class='label'>Одноразовый код:</span><span class='value'>" + values[3] + "</span>";
+    if(!response.ok){
+	if(response.status == 400){
+	    document.getElementById('encryptedText').innerHTML = "<p>Ошибка: " + data + "</p>";
+	}
+    }
+    else{
+
+	
+	var values = Object.keys(data[0]).map(function(key){
+	    return data[0][key];
+	});
+	document.getElementById('encryptedText').innerText = "Шифротекст: " + values[0];
+	document.getElementById('encryptedText').innerHTML += "<br>";
+	document.getElementById('encryptedText').innerText += "Ключ: " + values[1];
+	if(mode == "EAX"){
+	    document.getElementById('encryptedText').innerHTML += "<br>";
+	    document.getElementById('encryptedText').innerHTML += "Тег: " + values[2];
+	    document.getElementById('encryptedText').innerHTML += "<br>";
+	    document.getElementById('encryptedText').innerHTML += "Одноразовый код: " + values[3];
+	}
+	else if(mode == "CBC"){
+	    // document.getElementById('encryptedText').innerHTML += "<span class='label'>IV:</span><span class='value'>" + values[2] + "</span><br>";
+	    document.getElementById('encryptedText').innerHTML += "<br>";
+	    document.getElementById("encryptedText").innerText += "IV: " + values[2];
+	}
+    }
 }
 
 async function encryptFile() {
@@ -163,6 +184,16 @@ async function computeFileDiff() {
     var obj = JSON.parse(response);
     var json_hashes = JSON.stringify(obj, undefined, 4);
     document.getElementById("json-hashes-diff-text-area").value = json_hashes;
+}
+
+async function addNewFieldOnAlgoChange(){
+    var x = document.getElementById("choose-encryption-algo").value;
+    if(x != "CBC"){
+	document.getElementById("encryptionIV").style.display = "none";
+    }
+    else{
+	document.getElementById("encryptionIV").style.display = "";
+    }
 }
 // https://web.dev/articles/read-files
 // https://stackoverflow.com/questions/12942436/how-to-get-folder-directory-from-html-input-type-file-or-any-other-way

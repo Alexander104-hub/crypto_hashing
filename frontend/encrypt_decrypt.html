@@ -3,6 +3,13 @@
     <div id="encryption">
         <h2>Шифрование:</h2>
         <input type="text" id="encryptText" placeholder="Enter text to encrypt">
+	<input type="text" id="encryptionKey" placeholder="Enter key (if field is empty will be generated randomly)">
+	<input type="text" id="encryptionIV" placeholder="Enter IV (if field is empty will be generated randomly)" style="display:none">
+	<select id="choose-encryption-algo" onchange="addNewFieldOnAlgoChange()">
+	    <option value="ECB">ECB</option>
+	    <option value="CBC">CBC</option>
+	    <option value="EAX">EAX</option>
+	</select>
         <button class="custom-button" onclick="encrypt()">Зашифровать</button>
         <button class="custom-button" onclick="copyToClipboard()">Копировать шифротекст</button>
         <p id="encryptedText"></p>
