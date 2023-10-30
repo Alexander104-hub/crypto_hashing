@@ -24,14 +24,14 @@ async def decrypt_eax_read(ciphertext: str, key: str, tag: str, nonce: str):
         status_code=status.HTTP_200_OK,)
 
 @router.get("/decrypt_cbc", response_model=TEXT_DECRYPTION)
-async def decrypt_eax_read(ciphertext: str, key: str, iv: str):
+async def decrypt_cbc_read(ciphertext: str, key: str, iv: str):
     text = decrypt_cbc(ciphertext, key, iv)
     return JSONResponse(
         content=[text],
         status_code=status.HTTP_200_OK,)
 
 @router.get("/decrypt_ebc", response_model=TEXT_DECRYPTION)
-async def decrypt_eax_read(ciphertext: str, key: str):
+async def decrypt_ebc_read(ciphertext: str, key: str):
     text = decrypt_ebc(ciphertext, key)
     return JSONResponse(
         content=[text],

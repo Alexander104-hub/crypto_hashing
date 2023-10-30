@@ -87,12 +87,23 @@ async function getFiles() {
     document.getElementById('fileList').innerHTML = fileList;
 }
 
+
 async function decrypt() {
+    const mode = document.getElementById("choose_decryption-algo").value;
     const ciphertext = document.getElementById('decryptText').value;
     const key = document.getElementById('decryptKey').value;
     const tag = document.getElementById('decryptTag').value;
     const nonce = document.getElementById('decryptNonce').value;
-    const response = await fetch(`/api/decryption/?ciphertext=${encodeURIComponent(ciphertext)}&key=${encodeURIComponent(key)}&tag=${encodeURIComponent(tag)}&nonce=${encodeURIComponent(nonce)}`, {
+    const iv = document.getElementById('decryptIV').value;
+    let routerPath = '';
+    if (mode == 'CBC') {
+        routerPath = `/api/decryption/decrypt_cbc/?ciphertext=${encodeURIComponent(ciphertext)}&key=${encodeURIComponent(key)}&iv=${encodeURIComponent(iv)}`
+    } else if (mode == 'ECB') {
+        routerPath = `/api/decryption/decrypt_ebc/?ciphertext=${encodeURIComponent(ciphertext)}&key=${encodeURIComponent(key)}`
+    } else {
+        routerPath = `/api/decryption/decrypt_eax/?ciphertext=${encodeURIComponent(ciphertext)}&key=${encodeURIComponent(key)}&tag=${encodeURIComponent(tag)}&nonce=${encodeURIComponent(nonce)}`
+    }
+    const response = await fetch(routerPath, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -193,6 +204,25 @@ async function addNewFieldOnAlgoChange(){
     }
     else{
 	document.getElementById("encryptionIV").style.display = "";
+    }
+}
+
+async function addNewFieldOnDecryptAlgoChange(){
+    var x = document.getElementById("choose_decryption-algo").value;
+    if(x == "CBC"){
+	document.getElementById("decryptIV").style.display = "";
+    document.getElementById("decryptTag").style.display = "none";
+    document.getElementById("decryptNonce").style.display = "none";
+    }
+    else if(x == "EAX"){
+	document.getElementById("decryptTag").style.display = "";
+    document.getElementById("decryptNonce").style.display = "";
+    document.getElementById("decryptIV").style.display = "none";
+    }
+    else {
+        document.getElementById("decryptIV").style.display = "none";
+        document.getElementById("decryptTag").style.display = "none";
+        document.getElementById("decryptNonce").style.display = "none";
     }
 }
 // https://web.dev/articles/read-files

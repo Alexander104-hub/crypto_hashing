@@ -18,13 +18,20 @@
         <h2>Расшифровка:</h2>
         <input type="text" id="decryptText" placeholder="Enter ciphertext to decrypt">
         <input type="text" id="decryptKey" placeholder="Enter key">
-        <input type="text" id="decryptTag" placeholder="Enter tag">
-        <input type="text" id="decryptNonce" placeholder="Enter nonce">
+        <input type="text" id="decryptTag" placeholder="Enter tag" style="display:none">
+        <input type="text" id="decryptNonce" placeholder="Enter nonce" style="display:none">
+        <input type="text" id="decryptIV" placeholder="Enter IV" style="display:none">
+        <select id="choose_decryption-algo" onchange="addNewFieldOnDecryptAlgoChange()">
+            <option value="ECB">ECB</option>
+            <option value="CBC">CBC</option>
+            <option value="EAX">EAX</option>
+        </select>
         <button class="custom-button" onclick="decrypt()">Расшифровать</button>
         <div id="decryptedTextContainer">
             <h3>Расшифрованный текст:</h3>
             <p id="decryptedText"></p>
         </div>
+<!-- Working with files -->
         <div id="fileEncryption">
             <h2>Шифрование файла:</h2>
             <input type="file" id="encryptFile" placeholder="Выберите файл для шифрования">
