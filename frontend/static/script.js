@@ -41,6 +41,10 @@ async function encrypt() {
 async function encryptFile() {
     const fileInput = document.getElementById('encryptFile');
     const file = fileInput.files[0];
+    if (file.size > 100 * 1024 * 1024) {
+        alert('Размер файла на шифрование превышает 100 МБ');
+        return;
+    }
     const formData = new FormData();
     formData.append("file", file);
 
@@ -125,6 +129,10 @@ async function decryptAndDownloadFile() {
     }
     
     const file = fileInput.files[0];
+    if (file.size > 100 * 1024 * 1024) {
+        alert('Размер файла на расшифровку превышает 100 МБ');
+        return;
+    }
     const filename = file.name;
     let formData = new FormData();
     formData.append("file", file);
