@@ -68,8 +68,9 @@ input {
 }
 
 .label {
-    display: inline-block;
+    display: inline-block;  
     padding-right: 60px;
+    color: #00723d;
     text-align: right;
     font-weight: bold;
 }

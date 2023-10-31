@@ -1,17 +1,13 @@
 async function addEncryptionOutputFields(mode, values, postfix='') {
     id = 'encryptedText' + postfix
-	document.getElementById(id).innerHTML += "<br>";
-	document.getElementById(id).innerText += "Ключ: " + values[1];
+    // spans with class label and class value are needed for style.css. Alse class value is needed for copyToClipboard. DO NOT delete them
+	document.getElementById(id).innerHTML += "<span class=\"label\"> Ключ: </span><span class='value'>" + values[1] + "</span><br>";
 	if(mode == "EAX"){
-	    document.getElementById(id).innerHTML += "<br>";
-	    document.getElementById(id).innerHTML += "Тег: " + values[2];
-	    document.getElementById(id).innerHTML += "<br>";
-	    document.getElementById(id).innerHTML += "Одноразовый код: " + values[3];
+	    document.getElementById(id).innerHTML += "<span class=\"label\"> Тег: </span><span class='value'>" + values[2] + "</span><br>";
+	    document.getElementById(id).innerHTML += "<span class=\"label\"> Одноразовый код: </span><span class='value'>" + values[3] + "</span><br>";
 	}
 	else if(mode == "CBC"){
-	    // document.getElementById('encryptedText').innerHTML += "<span class='label'>IV:</span><span class='value'>" + values[2] + "</span><br>";
-	    document.getElementById(id).innerHTML += "<br>";
-	    document.getElementById(id).innerText += "IV: " + values[2];
+	    document.getElementById('encryptedText').innerHTML += "<span class=\"label\"> IV: </span><span class='value'>" + values[2] + "</span><br>";
 	}
 }
 
@@ -36,10 +32,10 @@ async function encrypt() {
 	    var values = Object.keys(data[0]).map(function(key){
 	        return data[0][key];
 	    });
-	    document.getElementById('encryptedText').innerText = "Шифротекст: " + values[0];
+	    document.getElementById('encryptedText').innerHTML = "<span class=\"label\"> Шифротекст: </span><span class='value'>" + values[0] + "</span><br>";
         addEncryptionOutputFields(mode, values);
     }
-}
+} 
 
 async function encryptFile() {
     const fileInput = document.getElementById('encryptFile');
