@@ -40,6 +40,8 @@ async function encrypt() {
 
 async function encryptFile() {
     const fileInput = document.getElementById('encryptFile');
+    const key = document.getElementById('en-file-key').value;
+    const mode = document.getElementById('file-encryption-algo').value;
     const file = fileInput.files[0];
     if (file.size > 100 * 1024 * 1024) {
         alert('Размер файла на шифрование превышает 100 МБ');
@@ -48,7 +50,7 @@ async function encryptFile() {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await fetch('/api/encryption/encrypt_file', {
+    const response = await fetch(`/api/encryption/encrypt_file/?mode=${encodeURIComponent(mode)}&key=${encodeURIComponent(key)}`, {
         method: 'POST',
         body: formData
     });

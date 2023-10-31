@@ -21,13 +21,16 @@ async def encryption_read(text: str, mode: str, key = None):
 
 
 @router.post("/encrypt_file", response_model=FILE_ENCRYPTION)
-async def encryption_read_file(file: UploadFile = File(...)):
-    ciphertext, key, tag, nonce = encrypt_file(await file.read())
+async def encryption_read_file(mode: str, key = None, file: UploadFile = File(...)):
+    # ciphertext, key, tag, nonce = encrypt(await file.read(), mode, key)
+    contents = encrypt(await file.read(), mode, key, encrypt_file=True)
+    ciphertext = contents['Шифротекст: ']
     encrypted_filename = f"{file.filename}"
     with open(f'{DIR_PATH}/{encrypted_filename}', 'wb') as f:
-        f.write(ciphertext)
+        f.write(ciphertext.encode())
     return JSONResponse(
-        content=[{'Ключ: ': key, 'Тег: ': tag, 'Одноразовый код: ': nonce}],
+        # content=[{'Ключ: ': key, 'Тег: ': tag, 'Одноразовый код: ': nonce}],
+        content=[contents],
         status_code=status.HTTP_200_OK,
     )
 

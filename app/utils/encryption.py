@@ -42,11 +42,13 @@ modes = {
 }
 
 
-def encrypt(text, mode, key, key_len = 32):
+def encrypt(text, mode, key, key_len = 32, encrypt_file=False):
     # key_len must be divisible by 8, max value is 32
     if not key:
         key = passgenerator.generatePassword(key_len)
-    text = text.encode('utf-8')
+    print(type(text))
+    if not encrypt_file:
+        text = text.encode('utf-8')
     random_key = bytes(key, "UTF-8")
     return modes[mode](text, random_key)
 
