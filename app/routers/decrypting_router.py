@@ -38,9 +38,10 @@ async def decrypt_ebc_read(ciphertext: str, key: str):
         status_code=status.HTTP_200_OK,)
 
 @router.post("/decrypt_file")
-async def upload_encrypted_file(key: str, tag: str, nonce: str, file: UploadFile=File(...)):
-    decrypted_text = decrypt_file(await file.read(), key, tag, nonce)
+async def upload_encrypted_file(mode: str, key: str, iv: str = None, tag: str = None, nonce: str = None, file: UploadFile=File(...)):
+    decrypted_text = decrypt_file(await file.read(), mode, key, iv, tag, nonce)
     decrypted_filename = f"{file.filename}"
+    # ciphertext = await file.read()
     with open(f"{DIR_PATH}/{decrypted_filename}", 'wb') as f:
         f.write(decrypted_text)
     return JSONResponse(

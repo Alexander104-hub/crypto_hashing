@@ -1,3 +1,20 @@
+async function addEncryptionOutputFields(mode, values, postfix='') {
+    id = 'encryptedText' + postfix
+	document.getElementById(id).innerHTML += "<br>";
+	document.getElementById(id).innerText += "Ключ: " + values[1];
+	if(mode == "EAX"){
+	    document.getElementById(id).innerHTML += "<br>";
+	    document.getElementById(id).innerHTML += "Тег: " + values[2];
+	    document.getElementById(id).innerHTML += "<br>";
+	    document.getElementById(id).innerHTML += "Одноразовый код: " + values[3];
+	}
+	else if(mode == "CBC"){
+	    // document.getElementById('encryptedText').innerHTML += "<span class='label'>IV:</span><span class='value'>" + values[2] + "</span><br>";
+	    document.getElementById(id).innerHTML += "<br>";
+	    document.getElementById(id).innerText += "IV: " + values[2];
+	}
+}
+
 async function encrypt() {
     const text = document.getElementById('encryptText').value;
     const mode = document.getElementById("choose-encryption-algo").value;
@@ -16,32 +33,19 @@ async function encrypt() {
 	}
     }
     else{
-
-	
-	var values = Object.keys(data[0]).map(function(key){
-	    return data[0][key];
-	});
-	document.getElementById('encryptedText').innerText = "Шифротекст: " + values[0];
-	document.getElementById('encryptedText').innerHTML += "<br>";
-	document.getElementById('encryptedText').innerText += "Ключ: " + values[1];
-	if(mode == "EAX"){
-	    document.getElementById('encryptedText').innerHTML += "<br>";
-	    document.getElementById('encryptedText').innerHTML += "Тег: " + values[2];
-	    document.getElementById('encryptedText').innerHTML += "<br>";
-	    document.getElementById('encryptedText').innerHTML += "Одноразовый код: " + values[3];
-	}
-	else if(mode == "CBC"){
-	    // document.getElementById('encryptedText').innerHTML += "<span class='label'>IV:</span><span class='value'>" + values[2] + "</span><br>";
-	    document.getElementById('encryptedText').innerHTML += "<br>";
-	    document.getElementById("encryptedText").innerText += "IV: " + values[2];
-	}
+	    var values = Object.keys(data[0]).map(function(key){
+	        return data[0][key];
+	    });
+	    document.getElementById('encryptedText').innerText = "Шифротекст: " + values[0];
+        addEncryptionOutputFields(mode, values);
     }
 }
 
 async function encryptFile() {
     const fileInput = document.getElementById('encryptFile');
     const key = document.getElementById('en-file-key').value;
-    const mode = document.getElementById('file-encryption-algo').value;
+    const mode = document.getElementById('choose-encryption-algoFile').value;
+    const iv = document.getElementById("encryptionIVFile").value;
     const file = fileInput.files[0];
     if (file.size > 100 * 1024 * 1024) {
         alert('Размер файла на шифрование превышает 100 МБ');
@@ -57,9 +61,11 @@ async function encryptFile() {
 
     const result = await response.json();
 
-    document.getElementById('encryptedFileKey').textContent = 'Ключ: ' + result[0]['Ключ: '];
-    document.getElementById('encryptedFileTag').textContent = 'Тег: ' + result[0]['Тег: '];
-    document.getElementById('encryptedFileNonce').textContent = 'Одноразовый код: ' + result[0]['Одноразовый код: '];
+    var values = Object.keys(result[0]).map(function(key){
+        return result[0][key];
+    });
+    document.getElementById('encryptedTextFile').innerText = "";
+    addEncryptionOutputFields(mode, values, 'File');
 }
 
 async function downloadEncryptedFile() {
@@ -122,10 +128,11 @@ async function decrypt() {
 
 async function decryptAndDownloadFile() {
     const fileInput = document.getElementById('decryptFile');
-    const key = document.getElementById('key').value;
-    const tag = document.getElementById('tag').value;
-    const nonce = document.getElementById('nonce').value;
-    
+    const key = document.getElementById('decryptKeyFile').value;
+    const tag = document.getElementById('decryptTagFile').value;
+    const nonce = document.getElementById('decryptNonceFile').value;
+    const iv = document.getElementById('decryptIVFile').value;
+    const mode = document.getElementById('choose_decryption-algoFile').value;
     if (!fileInput.files.length) {
         return;
     }
@@ -138,8 +145,8 @@ async function decryptAndDownloadFile() {
     const filename = file.name;
     let formData = new FormData();
     formData.append("file", file);
-
-    const response = await fetch(`/api/decryption/decrypt_file/?key=${encodeURIComponent(key)}&tag=${encodeURIComponent(tag)}&nonce=${encodeURIComponent(nonce)}`, {
+    // async def upload_encrypted_file(mode: str, key: str, iv: str = None, tag: str = None, nonce: str = None, file: UploadFile=File(...)):
+    const response = await fetch(`/api/decryption/decrypt_file/?mode=${encodeURIComponent(mode)}&key=${encodeURIComponent(key)}&iv=${encodeURIComponent(iv)}&tag=${encodeURIComponent(tag)}&nonce=${encodeURIComponent(nonce)}`, {
         method: 'POST',
         body: formData
     });
@@ -203,36 +210,39 @@ async function computeFileDiff() {
 	return response.text()
     });
     var obj = JSON.parse(response);
-    var json_hashes = JSON.stringify(obj, undefined, 4);
+    var json_hashes = JSON.stringify(obj, undefined, 4);    print(type(text))
     document.getElementById("json-hashes-diff-text-area").value = json_hashes;
 }
 
-async function addNewFieldOnAlgoChange(){
-    var x = document.getElementById("choose-encryption-algo").value;
+async function addNewFieldOnAlgoChange(postfix=''){
+    var x = document.getElementById("choose-encryption-algo" + postfix).value;
     if(x != "CBC"){
-	document.getElementById("encryptionIV").style.display = "none";
+	document.getElementById("encryptionIV" + postfix).style.display = "none";
     }
     else{
-	document.getElementById("encryptionIV").style.display = "";
+	document.getElementById("encryptionIV" + postfix).style.display = "";
     }
 }
 
-async function addNewFieldOnDecryptAlgoChange(){
-    var x = document.getElementById("choose_decryption-algo").value;
+async function addNewFieldOnDecryptAlgoChange(postfix=''){
+    var x = document.getElementById("choose_decryption-algo" + postfix).value;
+    const iv = 'decryptIV' + postfix;
+    const tag = 'decryptTag' + postfix;
+    const nonce = 'decryptNonce' + postfix;
     if(x == "CBC"){
-	document.getElementById("decryptIV").style.display = "";
-    document.getElementById("decryptTag").style.display = "none";
-    document.getElementById("decryptNonce").style.display = "none";
+	document.getElementById(iv).style.display = "";
+    document.getElementById(tag).style.display = "none";
+    document.getElementById(nonce).style.display = "none";
     }
     else if(x == "EAX"){
-	document.getElementById("decryptTag").style.display = "";
-    document.getElementById("decryptNonce").style.display = "";
-    document.getElementById("decryptIV").style.display = "none";
+	document.getElementById(tag).style.display = "";
+    document.getElementById(nonce).style.display = "";
+    document.getElementById(iv).style.display = "none";
     }
     else {
-        document.getElementById("decryptIV").style.display = "none";
-        document.getElementById("decryptTag").style.display = "none";
-        document.getElementById("decryptNonce").style.display = "none";
+        document.getElementById(iv).style.display = "none";
+        document.getElementById(tag).style.display = "none";
+        document.getElementById(nonce).style.display = "none";
     }
 }
 // https://web.dev/articles/read-files

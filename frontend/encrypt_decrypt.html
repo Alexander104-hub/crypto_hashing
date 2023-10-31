@@ -36,16 +36,15 @@
             <h2>Шифрование файла:</h2>
             <input type="file" id="encryptFile" placeholder="Выберите файл для шифрования">
             <input type="text" id="en-file-key" placeholder="Enter key (if field is empty will be generated randomly)">
-            <!-- <input type="text" id="encryptionIV" placeholder="Enter IV (if field is empty will be generated randomly)" style="display:none"> -->
-            <select id="file-encryption-algo" onchange="addNewFieldOnAlgoChange()">
+	        <input type="text" id="encryptionIVFile" placeholder="Enter IV (if field is empty will be generated randomly)" style="display:none">
+            <select id="choose-encryption-algoFile" onchange="addNewFieldOnAlgoChange('File')">
                 <option value="ECB">ECB</option>
                 <option value="CBC">CBC</option>
                 <option value="EAX">EAX</option>
             </select>
+            
             <button class="custom-button" onclick="encryptFile()">Зашифровать файл</button>
-            <p id="encryptedFileKey"></p>
-            <p id="encryptedFileTag"></p>
-            <p id="encryptedFileNonce"></p>
+            <p id="encryptedTextFile"></p>
         </div>
         <div id="fileDownload">
             <h2>Скачивание зашифрованного файла:</h2>
@@ -56,9 +55,16 @@
         <div id="fileDecryption">
             <h2>Расшифровка файла:</h2>
             <input type="file" id="decryptFile" placeholder="Выберите файл для расшифровки">
-            <input type="text" id="key" placeholder="Введите ключ">
-            <input type="text" id="tag" placeholder="Введите тег">
-            <input type="text" id="nonce" placeholder="Введите nonce">
+            <input type="text" id="decryptKeyFile" placeholder="Enter key">
+            <input type="text" id="decryptTagFile" placeholder="Enter tag" style="display:none">
+            <input type="text" id="decryptNonceFile" placeholder="Enter nonce" style="display:none">
+            <input type="text" id="decryptIVFile" placeholder="Enter IV" style="display:none">
+            <select id="choose_decryption-algoFile" onchange="addNewFieldOnDecryptAlgoChange('File')">
+                <option value="ECB">ECB</option>
+                <option value="CBC">CBC</option>
+                <option value="EAX">EAX</option>
+            </select>
+            
             <button class="custom-button" onclick="decryptAndDownloadFile()">Расшифровать и скачать файл</button>
         </div>                                    
     </div>
