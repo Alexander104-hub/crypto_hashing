@@ -206,7 +206,7 @@ async function computeFileDiff() {
 	return response.text()
     });
     var obj = JSON.parse(response);
-    var json_hashes = JSON.stringify(obj, undefined, 4);    print(type(text))
+    var json_hashes = JSON.stringify(obj, undefined, 4);
     document.getElementById("json-hashes-diff-text-area").value = json_hashes;
 }
 
