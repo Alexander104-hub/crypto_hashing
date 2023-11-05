@@ -35,4 +35,4 @@ def compute_diff(path1, path2):
     except Exception as e:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=str(e))
     else:
-        return JSONResponse(status_code=status.HTTP_200_OK, content=eval(difference))
+        return JSONResponse(status_code=status.HTTP_200_OK, content=difference)

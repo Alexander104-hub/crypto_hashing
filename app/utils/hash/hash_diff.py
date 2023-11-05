@@ -5,6 +5,8 @@ from ...exceptions import file_exceptions
 
 
 class HashDiff:
+    def __init__(self):
+        self.template = ""
     def preprocess_file_with_hashes(self, path):
         __path = Path(path)
         if not __path.exists():
@@ -30,29 +32,20 @@ class HashDiff:
                                               syntax='explicit', marshal=True))
 
     def __handle_diff_result(self, result):
-        return json.dumps(result, indent=4)
+        self.diff_template(result)
+        # print(self.template)
+        # return json.dumps(result, indent=4)
+        return self.template
 
-"""
-hash1 must be done earlier than hash2
-
-/path/dsad: new_hash - updated (highlight with green)
-/path/fjdksfgjdfg: new_hash - new (highlight with yellow)
-/path/fksdlfsdf - deleted (highlight with red)
-
-
-Overview:
-root folder:
-    updated:
-        summary:
-            folder_1:
-                main.py: hash_1 -> hash_2
-            folder_2:
-                index.html: hash_1 -> hash_2
-    summary:
-        deleted:
-            __init__.py
-
-
-<summary>
-"""
-
+    def diff_template(self, json):
+        nl: str = "\n"
+        for element in json:
+            if isinstance(json[element], dict):
+                self.template += f"<details><summary>{element}</summary>"
+                self.diff_template(json[element])
+            else:
+                if isinstance(json[element], list):
+                    self.template += f"<details><summary>{element}</summary>{nl.join(json[element])}</details>"
+                    continue
+                self.template += f"{element}: {json[element]}"
+        self.template += "</details>"

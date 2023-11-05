@@ -202,12 +202,16 @@ async function computeFileDiff() {
             'Content-Type': 'application/json'
         },
     }).then(function(response){
-
 	return response.text()
     });
-    var obj = JSON.parse(response);
-    var json_hashes = JSON.stringify(obj, undefined, 4);
-    document.getElementById("json-hashes-diff-text-area").value = json_hashes;
+    // var obj = JSON.parse(response);
+    // var json_hashes = JSON.stringify(obj, undefined, 4);
+    //
+    let parser = new DOMParser();
+    let doc = parser.parseFromString(response, 'text/html');
+    // document.getElementById("json-hashes-diff-text-area").innerHTML = doc;;
+    console.log(doc.body.outerHTML);
+    document.getElementById("hashes-textarea").innerHTML = doc.body.outerHTML;
 }
 
 async function addNewFieldOnAlgoChange(postfix=''){
