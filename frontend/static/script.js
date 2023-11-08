@@ -194,23 +194,27 @@ async function download_hashes() {
 
 
 async function computeFileDiff() {
-    var path1 = document.getElementById('file-path-diff-1').value;
-    var path2 = document.getElementById('file-path-diff-2').value;
-    let response = await fetch(`/api/hashing/compute_diff/?path1=${path1}&path2=${path2}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+    var file1 = document.getElementById('file-path-diff-1').files[0];
+    var file2 = document.getElementById('file-path-diff-2').files[0];
+    if((file1.name.split(".")[1] != "json") || file2.name.split(".")[1] != "json"){
+	alert('extension of one of loaded files is not json');
+	return
+    }
+    
+    // Валидация типа файла
+    const formData = new FormData();
+    formData.append("file1", file1);
+    formData.append("file2", file2);
+    let response = await fetch(`/api/hashing/compute_diff/`, {
+        method: 'POST',
+	body: formData
+
     }).then(function(response){
 	return response.text()
     });
-    // var obj = JSON.parse(response);
-    // var json_hashes = JSON.stringify(obj, undefined, 4);
-    //
     let parser = new DOMParser();
     let doc = parser.parseFromString(response, 'text/html');
     // document.getElementById("json-hashes-diff-text-area").innerHTML = doc;;
-    console.log(doc.body.outerHTML);
     document.getElementById("hashes-textarea").innerHTML = doc.body.outerHTML;
 }
 

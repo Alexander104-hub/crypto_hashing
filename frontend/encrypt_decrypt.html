@@ -3,8 +3,8 @@
     <div id="encryption">
         <h2>Шифрование:</h2>
         <input type="text" id="encryptText" placeholder="Enter text to encrypt">
-	<input type="text" id="encryptionKey" placeholder="Enter key (if field is empty will be generated randomly)">
-	<input type="text" id="encryptionIV" placeholder="Enter IV (if field is empty will be generated randomly)" style="display:none">
+	<input type="text" id="encryptionKey" placeholder="Enter key (key will be generated randomly if field is empty)">
+	<input type="text" id="encryptionIV" placeholder="Enter IV (IV will be generated randomly if field is empty)" style="display:none">
 	<select id="choose-encryption-algo" onchange="addNewFieldOnAlgoChange()">
 	    <option value="ECB">ECB</option>
 	    <option value="CBC">CBC</option>
@@ -35,8 +35,8 @@
         <div id="fileEncryption">
             <h2>Шифрование файла:</h2>
             <input type="file" id="encryptFile" placeholder="Выберите файл для шифрования">
-            <input type="text" id="en-file-key" placeholder="Enter key (if field is empty will be generated randomly)">
-	        <input type="text" id="encryptionIVFile" placeholder="Enter IV (if field is empty will be generated randomly)" style="display:none">
+            <input type="text" id="en-file-key" placeholder="Enter key (key will be generated randomly if field is empty)">
+	        <input type="text" id="encryptionIVFile" placeholder="Enter IV (IV will be generated randomly if field is empty)" style="display:none">
             <select id="choose-encryption-algoFile" onchange="addNewFieldOnAlgoChange('File')">
                 <option value="ECB">ECB</option>
                 <option value="CBC">CBC</option>
