@@ -2,17 +2,18 @@ from fastapi import APIRouter, UploadFile, status, File
 from fastapi.responses import JSONResponse, FileResponse
 from app.utils.hash import file_hashing, hash_diff
 from app.models.hashing_model import TextFile
+from typing import List
 
 router = APIRouter(prefix='/api/hashing', tags=['hashing'])
 
 
-@router.get("/", response_model=TextFile)
-async def compute_file_hash(filepath: str, hash_algo: str):
+@router.post("/", response_model=TextFile)
+async def compute_file_hash(hash_algo: str, files: List[UploadFile]):
     # Allow user select hash function he needs or wants.
     # https://www.pycrypto.org/doc/#crypto-hash-hash-functions
     try:
         hash_func = file_hashing.Hash()
-        hashes = hash_func.compute_file_hash(filepath, hash_algo)
+        hashes = await hash_func.compute_file_hash(files, hash_algo=hash_algo)
         return JSONResponse(status_code=status.HTTP_200_OK, content=hashes)
     except Exception as e:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=str(e))

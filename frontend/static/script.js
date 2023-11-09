@@ -165,15 +165,18 @@ async function decryptAndDownloadFile() {
 
 async function computeFileHash() {
 
-    var filepath = document.getElementById("file-browse").value;
+    var filepath = document.getElementById("file-browse").files;
     var hash_algo = document.getElementById("choose-hashes-algo").value;
-    let response = await fetch(`/api/hashing/?filepath=${filepath}&hash_algo=${hash_algo}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+    console.log(filepath);
+    const files = new FormData();
+    for(let i = 0; i < filepath.length; i++) {
+	files.append("files", filepath[i])
+    }
+    //
+    let response = await fetch(`/api/hashing/?hash_algo=${hash_algo}`, {
+        method: 'POST',
+	body: files,
     }).then(function(response){
-
 	return response.text()
     });
     var obj = JSON.parse(response);
@@ -196,12 +199,6 @@ async function download_hashes() {
 async function computeFileDiff() {
     var file1 = document.getElementById('file-path-diff-1').files[0];
     var file2 = document.getElementById('file-path-diff-2').files[0];
-    if((file1.name.split(".")[1] != "json") || file2.name.split(".")[1] != "json"){
-	alert('extension of one of loaded files is not json');
-	return
-    }
-    
-    // Валидация типа файла
     const formData = new FormData();
     formData.append("file1", file1);
     formData.append("file2", file2);
