@@ -164,13 +164,15 @@ async function decryptAndDownloadFile() {
 
 
 async function computeFileHash() {
-
-    var filepath = document.getElementById("file-browse").files;
+    var folders = document.getElementById("file-browse").files;
+    var uploaded_files = document.getElementById("file-browse-2").files;
     var hash_algo = document.getElementById("choose-hashes-algo").value;
-    console.log(filepath);
     const files = new FormData();
-    for(let i = 0; i < filepath.length; i++) {
-	files.append("files", filepath[i])
+    for(let i = 0; i < folders.length; i++) {
+	files.append("files", folders[i]);
+    }
+    for(let i = 0; i < uploaded_files.length; i++){
+	files.append("files", uploaded_files[i]);
     }
     //
     let response = await fetch(`/api/hashing/?hash_algo=${hash_algo}`, {

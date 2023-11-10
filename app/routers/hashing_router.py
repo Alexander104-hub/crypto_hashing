@@ -11,6 +11,7 @@ router = APIRouter(prefix='/api/hashing', tags=['hashing'])
 async def compute_file_hash(hash_algo: str, files: List[UploadFile]):
     # Allow user select hash function he needs or wants.
     # https://www.pycrypto.org/doc/#crypto-hash-hash-functions
+    #https://stackoverflow.com/questions/73442335/how-to-upload-a-large-file-%E2%89%A53gb-to-fastapi-backend 
     try:
         hash_func = file_hashing.Hash()
         hashes = await hash_func.compute_file_hash(files, hash_algo=hash_algo)
