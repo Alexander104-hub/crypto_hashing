@@ -1,18 +1,16 @@
 import hashlib
-from pathlib import Path
-import os
 import json
 
 
 class Hash:
     def __init__(self):
         self.__hashes = {}
+        self.__CHUNK_SIZE = 1024 ** 2 # Default: 1024 (bytes) ** 2 = 1MB;
     async def compute_file_hash(self, *files, hash_algo):
         # if path.is_dir():
         #     hashes[filepath] = self.__dir_to_list(filepath, hash_algo)
         for file in files[0]:
-            self.__hashes[file.filename] = self.__get_hash(await file.read(), hash_algo)
-
+            self.__hashes[file.filename] = self.__get_hash(file, hash_algo)
 
         with open("./hashes.json", "w") as file:
             json.dump(self.__hashes, file, indent=4)
@@ -25,8 +23,10 @@ class Hash:
         keys = sorted(hashes.keys(), key=lambda x: len(x.split('/')))
         for key in keys:
             exec_string = "result"
-            for part in key.split('/'):
-                if len(part.split('.')) >= 2:
+            splited_key = key.split('/')
+            for part in splited_key:
+                if len(part.split('.')) >= 2 and \
+                    not part.startswith('.') or splited_key[-1] == part:
                     exec_string += f"['{part}'] = '{hashes[key]}'"
                 else:
                     exec_string += f"['{part}']"
@@ -36,12 +36,9 @@ class Hash:
                         exec(exec_string + " = {}")
             exec(exec_string)
         return result
-            # print(result)
-# frontend/index.html
-# frontend/static/css/style.css
 
-
-    def __get_hash(self, content, hash_algo):
+    def __get_hash(self, file, hash_algo):
         hash_func = hashlib.new(hash_algo)
-        hash_func.update(content)
+        while content := file.file.read(self.__CHUNK_SIZE):
+            hash_func.update(content)
         return hash_func.hexdigest() 
