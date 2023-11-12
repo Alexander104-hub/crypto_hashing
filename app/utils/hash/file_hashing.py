@@ -1,5 +1,4 @@
 import hashlib
-import json
 
 
 class Hash:
@@ -7,14 +6,8 @@ class Hash:
         self.__hashes = {}
         self.__CHUNK_SIZE = 1024 ** 2 # Default: 1024 (bytes) ** 2 = 1MB;
     async def compute_file_hash(self, *files, hash_algo):
-        # if path.is_dir():
-        #     hashes[filepath] = self.__dir_to_list(filepath, hash_algo)
         for file in files[0]:
             self.__hashes[file.filename] = self.__get_hash(file, hash_algo)
-
-        with open("./hashes.json", "w") as file:
-            json.dump(self.__hashes, file, indent=4)
-
         return self.__structured_json(self.__hashes)
 
 

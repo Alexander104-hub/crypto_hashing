@@ -5,8 +5,7 @@ class HashDiff:
     def __init__(self):
         self.template = ""
     def preprocess_file_with_hashes(self, file_content):
-            # Open it and return file's content.
-        if type(eval(file_content)) != dict: # check for strs and dicts
+        if type(eval(file_content)) != dict:
             raise TypeError('Content is not json')
         return eval(file_content)
 
