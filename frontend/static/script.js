@@ -37,12 +37,24 @@ async function encrypt() {
     }
 } 
 
+async function downloadFileFromResponse(response, filename) {
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'download';
+    a.click();
+}
+
 async function encryptFile() {
     const fileInput = document.getElementById('encryptFile');
     const key = document.getElementById('en-file-key').value;
     const mode = document.getElementById('choose-encryption-algoFile').value;
     const iv = document.getElementById("encryptionIVFile").value;
     const file = fileInput.files[0];
+    const filename = file.name
+
     if (file.size > 100 * 1024 * 1024) {
         alert('Размер файла на шифрование превышает 100 МБ');
         return;
@@ -62,18 +74,16 @@ async function encryptFile() {
     });
     document.getElementById('encryptedTextFile').innerText = "";
     addEncryptionOutputFields(mode, values, 'File');
+
+    // Added instant downloading of encrypted file:
+    const downloadResponse = await fetch('/api/encryption/download_encrypted_file/' + filename);
+    downloadFileFromResponse(downloadResponse, filename);
 }
 
 async function downloadEncryptedFile() {
     const filename = document.getElementById('downloadFileName').value;
     const response = await fetch('/api/encryption/download_encrypted_file/' + filename);
-    const blob = await response.blob();
-
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename || 'download';
-    a.click();
+    downloadFileFromResponse(response, filename);
 }
 
 async function getFiles() {
