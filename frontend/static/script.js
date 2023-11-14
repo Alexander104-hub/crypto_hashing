@@ -158,12 +158,7 @@ async function decryptAndDownloadFile() {
         body: formData
     });
     if (response.ok) {
-        const blob = await response.blob();
-        let url = window.URL.createObjectURL(blob);
-        let a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
+        downloadFileFromResponse(response, filename);
     }
 }
 
