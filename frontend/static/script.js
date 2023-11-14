@@ -7,7 +7,9 @@ async function addEncryptionOutputFields(mode, values, postfix='') {
 	    document.getElementById(id).innerHTML += "<span class=\"label\"> Одноразовый код: </span><span class='value'>" + values[3] + "</span><br>";
 	}
 	else if(mode == "CBC"){
-	    document.getElementById('encryptedText').innerHTML += "<span class=\"label\"> IV: </span><span class='value'>" + values[2] + "</span><br>";
+        console.log(values[2])
+        console.log('FFF')
+	    document.getElementById(id).innerHTML += "<span class=\"label\"> IV: </span><span class='value'>" + values[2] + "</span><br>";
 	}
 }
 
@@ -151,23 +153,17 @@ async function decryptAndDownloadFile() {
     const filename = file.name;
     let formData = new FormData();
     formData.append("file", file);
-    // async def upload_encrypted_file(mode: str, key: str, iv: str = None, tag: str = None, nonce: str = None, file: UploadFile=File(...)):
     const response = await fetch(`/api/decryption/decrypt_file/?mode=${encodeURIComponent(mode)}&key=${encodeURIComponent(key)}&iv=${encodeURIComponent(iv)}&tag=${encodeURIComponent(tag)}&nonce=${encodeURIComponent(nonce)}`, {
         method: 'POST',
         body: formData
     });
     if (response.ok) {
-
-        // Скачивание расшифрованного файла
-        const downloadResponse = await fetch(`/api/decryption/download_decrypted_file/${filename}`);
-        if (downloadResponse.ok) {
-            const blob = await downloadResponse.blob();
-            let url = window.URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-        }
+        const blob = await response.blob();
+        let url = window.URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
     }
 }
 

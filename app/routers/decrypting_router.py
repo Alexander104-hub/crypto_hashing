@@ -1,7 +1,8 @@
 from app.models.decryption_model import TEXT_DECRYPTION
 from app.utils.decryption import decrypt_cbc, decrypt_eax, decrypt_ebc, decrypt_file
 from fastapi import APIRouter, status, UploadFile, File, HTTPException
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
+from io import BytesIO
 import os
 
 
@@ -37,17 +38,11 @@ async def decrypt_ebc_read(ciphertext: str, key: str):
         content=[text],
         status_code=status.HTTP_200_OK,)
 
+
 @router.post("/decrypt_file")
 async def upload_encrypted_file(mode: str, key: str, iv: str = None, tag: str = None, nonce: str = None, file: UploadFile=File(...)):
     decrypted_text = decrypt_file(await file.read(), mode, key, iv, tag, nonce)
-    decrypted_filename = f"{file.filename}"
-    # ciphertext = await file.read()
-    with open(f"{DIR_PATH}/{decrypted_filename}", 'wb') as f:
-        f.write(decrypted_text)
-    return JSONResponse(
-        content=[],
-        status_code=status.HTTP_200_OK,
-    )
+    return StreamingResponse(BytesIO(decrypted_text), media_type='application/octet-stream', headers={'Content-Disposition': f'attachment; filename={file.filename}'})
 
 
 @router.get("/download_decrypted_file/{filename}")
