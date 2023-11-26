@@ -10,8 +10,8 @@ class HashDiff:
         return eval(file_content)
 
     def compute_diff(self, hash1, hash2):
-        return self.__handle_diff_result(diff(hash1, hash2,\
-                                              syntax='explicit', marshal=True))
+        hash_diff = diff(hash1, hash2, syntax='explicit', marshal=True)
+        return self.__handle_diff_result(hash_diff)
 
     def __handle_diff_result(self, result):
         self.diff_template(result)
