@@ -144,3 +144,15 @@ details[open] summary {
   border-bottom: 1px solid #aaa;
   margin-bottom: 0.5em;
 }
+
+#save_file {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    width: 50px;
+}
+
+#save_file_label {
+    font-weight: bold;
+    font-size: x-large;
+}

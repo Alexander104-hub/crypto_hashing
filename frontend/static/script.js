@@ -1,5 +1,5 @@
 async function addEncryptionOutputFields(mode, values, postfix='') {
-    id = 'encryptedText' + postfix
+    id = 'encryptedText' + postfix;
     // spans with class label and class value are needed for style.css. Alse class value is needed for copyToClipboard. DO NOT delete them
 	document.getElementById(id).innerHTML += "<span class=\"label\"> Ключ: </span><span class='value'>" + values[1] + "</span><br>";
 	if(mode == "EAX"){
@@ -13,11 +13,32 @@ async function addEncryptionOutputFields(mode, values, postfix='') {
 	}
 }
 
+async function downloadFileFromResponse(response, filename) {
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'download';
+    a.click();
+}
+
+async function downloadTxt(text, filename) {
+    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'download';
+    a.click();
+}
+
 async function encrypt() {
     const text = document.getElementById('encryptText').value;
     const mode = document.getElementById("choose-encryption-algo").value;
     const key = document.getElementById("encryptionKey").value;
     const iv = document.getElementById("encryptionIV").value;
+
+    const save_to_file = document.getElementById('save_file').checked;
     const response = await fetch(`/api/encryption/?text=${encodeURIComponent(text)}&mode=${mode}&key=${key}&iv=${iv}`, {
         method: 'GET',
         headers: {
@@ -28,6 +49,7 @@ async function encrypt() {
     if(!response.ok){
 	if(response.status == 400){
 	    document.getElementById('encryptedText').innerHTML = "<p>Ошибка: " + data + "</p>";
+        return;
 	}
     }
     else{
@@ -35,19 +57,19 @@ async function encrypt() {
 	        return data[0][key];
 	    });
 	    document.getElementById('encryptedText').innerHTML = "<span class=\"label\"> Шифротекст: </span><span class='value'>" + values[0] + "</span><br>";
-        addEncryptionOutputFields(mode, values);
+        if (!save_to_file) {
+            addEncryptionOutputFields(mode, values);
+        }
     }
+    if (save_to_file){
+        var values = Object.keys(data[0]).map(function(key){
+	        return key + ':\t' + data[0][key] + '\n';
+	    });
+        downloadTxt(values, "secret.txt");
+    }
+
 } 
 
-async function downloadFileFromResponse(response, filename) {
-    const blob = await response.blob();
-
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename || 'download';
-    a.click();
-}
 
 async function encryptFile() {
     const fileInput = document.getElementById('encryptFile');
